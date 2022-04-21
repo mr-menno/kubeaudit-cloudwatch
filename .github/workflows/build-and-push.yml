@@ -4,7 +4,7 @@ on:
   push:
 
 jobs:
-  build-and-scan:
+  build-and-push:
     runs-on: ubuntu-latest
 
     env:
@@ -28,7 +28,7 @@ jobs:
       with:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
         flavor: |
-          latest=auto
+          latest=true
         tags: |
           type=ref,event=branch
           type=ref,event=pr
