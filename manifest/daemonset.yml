@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app: kubeaudit-cloudwatch
+  name: kubeaudit-cloudwatch
+  namespace: lacework
+spec:
+  selector:
+    matchLabels:
+      app: kubeaudit-cloudwatch
+  template:
+    metadata:
+      labels:
+        app: kubeaudit-cloudwatch
+    spec:
+      serviceAccountName: kubeaudit-cloudwatch
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+        effect: NoSchedule
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: node-role.kubernetes.io/master
+                operator: Exists
+      containers:
+      - image: ghcr.io/mr-menno/kubeaudit-cloudwatch:latest
+        name: kubeaudit-cloudwatch
+        ports:
+        - containerPort: 4516
+        volumeMounts:
+        - mountPath: /var/log/kubernetes
+          name: var-log-kubernetes
+        env:
+        - name: AWS_REGION
+          valueFrom: 
+            secretKeyRef: 
+              name: kubeaudit-cloudwatch 
+              key: AWS_REGION
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom: 
+            secretKeyRef: 
+              name: kubeaudit-cloudwatch 
+              key: AWS_ACCESS_KEY_ID
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom: 
+            secretKeyRef: 
+              name: kubeaudit-cloudwatch 
+              key: AWS_SECRET_ACCESS_KEY
+        - name: CLOUDWATCH_LOGGROUP
+          value: /aws/eks/riverside/cluster
+      volumes:
+        - hostPath: 
+            path: /var/log/kubernetes
+            type: DirectoryOrCreate
+          name: var-log-kubernetes

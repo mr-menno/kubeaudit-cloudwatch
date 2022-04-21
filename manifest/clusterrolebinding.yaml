@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: kubeaudit-cloudwatch
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kubeaudit-cloudwatch
+subjects:
+- kind: ServiceAccount
+  name: kubeaudit-cloudwatch
+  namespace: lacework
