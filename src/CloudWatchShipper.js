@@ -17,6 +17,7 @@ class CloudWatchShipper {
     this.last = new Date().getTime();
     this.minInterval = 30*1000;
     this.eventId = 0;
+    console.log(`CloudWatchShipper ready for group:${this.logGroup} stream:${this.logStream}`);
     this.startSending();
     this.status = {
       cloudwatch_sent: 0
