@@ -17,7 +17,7 @@ class KubeApi {
       this.CACERT=fs.readFileSync(this.SERVICEACCOUNT+'/ca.crt');
       https.globalAgent.options.ca.push(this.CACERT);
     } catch(e) {
-      console.error('cannot read credentials')
+      console.error('Cannot read K8s API credentials',e)
     }
   }
 

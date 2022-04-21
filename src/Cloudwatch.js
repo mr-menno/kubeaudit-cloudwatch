@@ -1,6 +1,11 @@
 // Load the AWS SDK for Node.js
 var AWS = require('aws-sdk');
 
+if(!process.env.AWS_REGION || !process.env.AWS_SECRET_ACCESS_KEY || !process.env.AWS_ACCESS_KEY_ID) {
+  console.error("Missing AWS variables");
+  process.exit(1);
+}
+
 function cloudWatchPutLogEvents(events,group,stream,sequenceToken) {
   return new Promise((resolve,reject) => {
     const cloudwatchlogs = new AWS.CloudWatchLogs();
@@ -26,12 +31,12 @@ function cloudWatchDescribeLogStreams(group,stream) {
     cloudwatchlogs.describeLogStreams(params, (err,data) => {
       if(err) return reject(err);
       let logStream = data.logStreams.find(ls=>ls.logStreamName==stream);
-      console.log(logStream);
+      console.log("Log Stream: ",logStream);
       if(logStream) return resolve(logStream);
 
       cloudwatchlogs.createLogStream({logGroupName: group, logStreamName: stream}, (err,data) => {
         if(err) return reject(err);
-        console.log(data);
+        console.log("createLogStream result",data);
       });
       
     });

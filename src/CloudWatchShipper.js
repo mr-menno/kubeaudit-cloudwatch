@@ -38,9 +38,13 @@ class CloudWatchShipper {
             if(this.eventQueue.length==0) break;
             events_slice.push(this.eventQueue.shift());
           }
-          console.log(`sending events: ${events_slice.length}/${this.eventQueue.length}`);
-          await this.sendEvents(events_slice);
-          events_slice = [];
+          console.log(`sendEvents() sending ${events_slice.length}/${this.eventQueue.length}`);
+          try {
+            await this.sendEvents(events_slice);
+            events_slice = [];
+          } catch(e) {
+            console.error('sendEvents error',e);
+          }
         }
         this.sending=false;
       } else {
