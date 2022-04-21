@@ -9,7 +9,7 @@ jobs:
 
     env:
       REGISTRY: ghcr.io
-      IMAGE_NAME: ${{ github.repository }}
+      IMAGE_NAME: ${{ github.repository }}/kubeaudit-cloudwatch
 
     steps:
     - name: Checkout
@@ -38,5 +38,6 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
+        push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}        
