@@ -31,9 +31,13 @@ function cloudWatchDescribeLogStreams(group,stream) {
     cloudwatchlogs.describeLogStreams(params, (err,data) => {
       if(err) return reject(err);
       let logStream = data.logStreams.find(ls=>ls.logStreamName==stream);
-      console.log("Log Stream: ",logStream);
-      if(logStream) return resolve(logStream);
+      console.log("Log Group: ",group);
+      if(logStream) {
+        console.log("Log Stream found: ",stream,logStream);
+        return resolve(logStream);
+      }
 
+      console.log("Creating logstream: ",stream)
       cloudwatchlogs.createLogStream({logGroupName: group, logStreamName: stream}, (err,data) => {
         if(err) return reject(err);
         console.log("createLogStream result",data);

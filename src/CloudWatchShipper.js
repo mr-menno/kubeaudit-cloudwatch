@@ -57,6 +57,7 @@ class CloudWatchShipper {
   async sendEvents(events) {
     let res;
     if(this.nextSequenceToken == null) {
+      console.log(`Requesting cloudWatchDescribeLogStreams group:${this.logGroup} stream:${this.logStream}`)
       let res = await Cloudwatch.cloudWatchDescribeLogStreams(this.logGroup,this.logStream);
       this.nextSequenceToken = res.uploadSequenceToken || null;
     }
