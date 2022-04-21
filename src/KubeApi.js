@@ -8,17 +8,6 @@ class KubeApi {
     this.NAMESPACE='';
     this.TOKEN='';
     this.CACERT='';
-
-    try {
-      this.KUBERNETES_API = process.env.KUBERNETES_API || 'https://kubernetes.default.svc';
-      this.SERVICEACCOUNT='/var/run/secrets/kubernetes.io/serviceaccount';
-      this.NAMESPACE=fs.readFileSync(this.SERVICEACCOUNT+'/namespace').toString();
-      this.TOKEN=fs.readFileSync(this.SERVICEACCOUNT+'/token').toString();
-      this.CACERT=fs.readFileSync(this.SERVICEACCOUNT+'/ca.crt');
-      https.globalAgent.options.ca.push(this.CACERT);
-    } catch(e) {
-      console.error('Cannot read K8s API credentials',e)
-    }
   }
 
   kubeapiOptions = () => {
@@ -38,6 +27,18 @@ class KubeApi {
 
   async validate() {
     let validation = {errors:[]};
+
+    try {
+      this.KUBERNETES_API = process.env.KUBERNETES_API || 'https://kubernetes.default.svc';
+      this.SERVICEACCOUNT='/var/run/secrets/kubernetes.io/serviceaccount';
+      this.NAMESPACE=fs.readFileSync(this.SERVICEACCOUNT+'/namespace').toString();
+      this.TOKEN=fs.readFileSync(this.SERVICEACCOUNT+'/token').toString();
+      this.CACERT=fs.readFileSync(this.SERVICEACCOUNT+'/ca.crt');
+      https.globalAgent.options.ca.push(this.CACERT);
+    } catch(e) {
+      console.error('Cannot read K8s API credentials',e)
+    }
+    
     let kubeapiNodes;
     try {
       kubeapiNodes = await axios.get(this.KUBERNETES_API+'/api/v1/namespaces/kube-system/pods?labelSelector=component%3Dkube-apiserver', {
