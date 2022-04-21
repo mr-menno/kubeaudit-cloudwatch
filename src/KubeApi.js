@@ -34,6 +34,7 @@ class KubeApi {
       this.NAMESPACE=fs.readFileSync(this.SERVICEACCOUNT+'/namespace').toString();
       this.TOKEN=fs.readFileSync(this.SERVICEACCOUNT+'/token').toString();
       this.CACERT=fs.readFileSync(this.SERVICEACCOUNT+'/ca.crt');
+      if(!https.globalAgent.options) https.globalAgent.options = {ca:[]}
       https.globalAgent.options.ca.push(this.CACERT);
     } catch(e) {
       validation.errors.push("Cannot read K8s API credentials");
