@@ -36,9 +36,13 @@ class KubeApi {
       this.CACERT=fs.readFileSync(this.SERVICEACCOUNT+'/ca.crt');
       https.globalAgent.options.ca.push(this.CACERT);
     } catch(e) {
+      validation.errors.push("Cannot read K8s API credentials");
       console.error('Cannot read K8s API credentials',e)
+      return {
+        kubeapi_errors: validation.errors
+      }
     }
-    
+
     let kubeapiNodes;
     try {
       kubeapiNodes = await axios.get(this.KUBERNETES_API+'/api/v1/namespaces/kube-system/pods?labelSelector=component%3Dkube-apiserver', {
