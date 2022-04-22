@@ -47,7 +47,7 @@ kubeapi.validate().then(validation => {
 })
 
 reader.on('events', (events) => {
-  events.forEach(event => cws.sendEvent({event: event}));
+  events.forEach(event => cws.sendEvent(event));
 })
 
 process.on('SIGINT', () => {
