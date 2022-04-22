@@ -1,0 +1,14 @@
+AWS:
+  AWS_ACCESS_KEY_ID: 
+  AWS_SECRET_ACCESS_KEY: 
+  AWS_REGION:
+image:
+  repository: ghcr.io/mr-menno/kubeaudit-cloudwatch
+  tag: latest
+cloudwatch:
+  #loggroup: /aws/eks/<clustername>/cluster
+  loggroup: 
+
+## this should be based on the kube-api --audit-log-path attribute of k8s 
+k8s:
+  audit_log_path: /var/log/kubernetes
