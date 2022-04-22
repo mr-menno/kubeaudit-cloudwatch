@@ -10,7 +10,7 @@ class CloudWatchShipper {
     //to meet Lacework EKS audit filtering, the following logstream name needs to be defined
     //similiar to EKS audit log streams.  (md5 of hostname used to generate logstream)
     // i.e. kube-apiserver-audit-a8ba83385133f5b3082cec63dedc0000
-    this.logStream = logStream || "kube-apiserver-audit-"+crypto.createHash('md5').update(os.hostname()).digest('hex');
+    this.logStream = logStream || os.hostname();
     this.eventQueue = [];
     this.nextSequenceToken = null;
     this.sending = false;

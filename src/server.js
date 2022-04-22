@@ -5,10 +5,12 @@ const KubeApi = require('./KubeApi');
 const CloudWatchShipper = require('./CloudWatchShipper.js');
 // let cw = require('./cloudwatch.js');
 const os = require('os');
+let crypto=require('crypto');
+
 let kubeapi = new KubeApi();
 let cws = new CloudWatchShipper({
   logGroup: process.env.CLOUDWATCH_LOGGROUP,
-  //logStream: **this is dynamically generated if not set**
+  logStream: "kube-apiserver-audit-"+crypto.createHash('md5').update(process.env.K8S_NODENAME || os.hostname).digest('hex')
 });
 
 const app = express();
@@ -32,7 +34,7 @@ app.get('/status', async (req,res) => {
 })
 
 app.listen(4516,() => {
-  console.log("📡 listening for audit events");
+  console.log("📡 listening for audit events on "+process.env.K8S_NODENAME);
 });
 
 kubeapi.validate().then(validation => {
