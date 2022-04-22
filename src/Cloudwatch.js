@@ -40,6 +40,7 @@ function cloudWatchDescribeLogStreams(group,stream) {
       console.log("Creating logstream: ",stream)
       cloudwatchlogs.createLogStream({logGroupName: group, logStreamName: stream}, (err,data) => {
         if(err) return reject(err);
+        resolve(stream);
         console.log("createLogStream result",data);
       });
       
