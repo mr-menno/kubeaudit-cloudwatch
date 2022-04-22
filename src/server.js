@@ -10,7 +10,7 @@ let crypto=require('crypto');
 let kubeapi = new KubeApi();
 let cws = new CloudWatchShipper({
   logGroup: process.env.CLOUDWATCH_LOGGROUP,
-  logStream: "kube-apiserver-audit-"+crypto.createHash('md5').update(process.env.K8S_NODENAME || os.hostname).digest('hex')
+  logStream: "kube-apiserver-audit-"+crypto.createHash('md5').update(process.env.K8S_NODENAME || os.hostname()).digest('hex')
 });
 
 const app = express();
