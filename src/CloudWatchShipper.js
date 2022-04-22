@@ -62,7 +62,9 @@ class CloudWatchShipper {
       this.nextSequenceToken = res.uploadSequenceToken || null;
     }
     //262144 is cloud watch event size limit
-    events = events.map(e=>({
+    events = events
+    .filter(e=>e.length<262144)
+    .map(e=>({
       message: e,
       timestamp: new Date().getTime()
     }));
